@@ -8,7 +8,13 @@ use tokio::sync::oneshot;
 /// produciing a future that resolves with the function's return value.
 ///
 /// # Errors
-/// Forwards Tokio's [`RecvError`](tokio::sync::oneshot::error::RecvError), i.e. if the channel is closed.
+/// Forwards Tokio's [`RecvError`](tokio::sync::oneshot::error::RecvError),
+/// i.e. if the channel is closed.
+///
+/// # Panics
+/// If the task function panics, the panic will be propagated through the
+/// returned future. Thie will NOT trigger the Rayon thread pool's panic
+/// handler.
 pub fn spawn_async<F, R>(func: F) -> AsyncHandle<R>
 where
     F: FnOnce() -> R + UnwindSafe + Send + 'static,
@@ -29,7 +35,13 @@ where
 /// produciing a future that resolves with the function's return value.
 ///
 /// # Errors
-/// Forwards Tokio's [`RecvError`](tokio::sync::oneshot::error::RecvError), i.e. if the channel is closed.
+/// Forwards Tokio's [`RecvError`](tokio::sync::oneshot::error::RecvError),
+/// i.e. if the channel is closed.
+///
+/// # Panics
+/// If the task function panics, the panic will be propagated through the
+/// returned future. Thie will NOT trigger the Rayon thread pool's panic
+/// handler.
 pub fn spawn_fifo_async<F, R>(func: F) -> AsyncHandle<R>
 where
     F: FnOnce() -> R + UnwindSafe + Send + 'static,
