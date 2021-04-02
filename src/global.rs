@@ -1,4 +1,5 @@
-use crate::Handle;
+use crate::AsyncHandle;
+use std::panic::{catch_unwind, UnwindSafe};
 use tokio::sync::oneshot;
 
 /// Asynchronous wrapper around Rayon's [`spawn`](rayon::spawn).
@@ -8,18 +9,18 @@ use tokio::sync::oneshot;
 ///
 /// # Errors
 /// Forwards Tokio's [`RecvError`](tokio::sync::oneshot::error::RecvError), i.e. if the channel is closed.
-pub fn spawn_async<F, R>(func: F) -> Handle<R>
+pub fn spawn_async<F, R>(func: F) -> AsyncHandle<R>
 where
-    F: FnOnce() -> R + Send + 'static,
+    F: FnOnce() -> R + UnwindSafe + Send + 'static,
     R: Send + 'static,
 {
     let (tx, rx) = oneshot::channel();
 
     rayon::spawn(move || {
-        let _ = tx.send(func());
+        let _ = tx.send(catch_unwind(func));
     });
 
-    Handle { rx }
+    AsyncHandle { rx }
 }
 
 /// Asynchronous wrapper around Rayon's [`spawn_fifo`](rayon::spawn_fifo).
@@ -29,18 +30,18 @@ where
 ///
 /// # Errors
 /// Forwards Tokio's [`RecvError`](tokio::sync::oneshot::error::RecvError), i.e. if the channel is closed.
-pub fn spawn_fifo_async<F, R>(func: F) -> Handle<R>
+pub fn spawn_fifo_async<F, R>(func: F) -> AsyncHandle<R>
 where
-    F: FnOnce() -> R + Send + 'static,
+    F: FnOnce() -> R + UnwindSafe + Send + 'static,
     R: Send + 'static,
 {
     let (tx, rx) = oneshot::channel();
 
     rayon::spawn_fifo(move || {
-        let _ = tx.send(func());
+        let _ = tx.send(catch_unwind(func));
     });
 
-    Handle { rx }
+    AsyncHandle { rx }
 }
 
 #[cfg(test)]

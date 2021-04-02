@@ -10,6 +10,7 @@ keywords = ["tokio", "rayon", "async", "thread-pool"]
 categories = ["asynchronous", "concurrency", "rust-patterns"]
 
 [dependencies]
+derivative = "^2.2.0"
 tokio = { version = "^1.4.0", default-features = false, features = ["sync"] }
 pin-project = "^1.0.6"
 rayon = "^1.5.0"

@@ -1,5 +1,6 @@
-use crate::Handle;
+use crate::AsyncHandle;
 use rayon::ThreadPool;
+use std::panic::{catch_unwind, UnwindSafe};
 use tokio::sync::oneshot;
 
 /// Extension trait that integrates Rayon's [`ThreadPool`](rayon::ThreadPool)
@@ -13,9 +14,9 @@ pub trait AsyncThreadPool {
     ///
     /// # Errors
     /// Forwards Tokio's [`RecvError`](tokio::sync::oneshot::error::RecvError), i.e. if the channel is closed.
-    fn spawn_async<F, R>(&self, func: F) -> Handle<R>
+    fn spawn_async<F, R>(&self, func: F) -> AsyncHandle<R>
     where
-        F: FnOnce() -> R + Send + 'static,
+        F: FnOnce() -> R + UnwindSafe + Send + 'static,
         R: Send + 'static;
 
     /// Asynchronous wrapper around Rayon's
@@ -26,39 +27,39 @@ pub trait AsyncThreadPool {
     ///
     /// # Errors
     /// Forwards Tokio's [`RecvError`](tokio::sync::oneshot::error::RecvError), i.e. if the channel is closed.
-    fn spawn_fifo_async<F, R>(&self, f: F) -> Handle<R>
+    fn spawn_fifo_async<F, R>(&self, f: F) -> AsyncHandle<R>
     where
-        F: FnOnce() -> R + Send + 'static,
+        F: FnOnce() -> R + UnwindSafe + Send + 'static,
         R: Send + 'static;
 }
 
 impl AsyncThreadPool for ThreadPool {
-    fn spawn_async<F, R>(&self, func: F) -> Handle<R>
+    fn spawn_async<F, R>(&self, func: F) -> AsyncHandle<R>
     where
-        F: FnOnce() -> R + Send + 'static,
+        F: FnOnce() -> R + UnwindSafe + Send + 'static,
         R: Send + 'static,
     {
         let (tx, rx) = oneshot::channel();
 
         self.spawn(move || {
-            let _ = tx.send(func());
+            let _ = tx.send(catch_unwind(func));
         });
 
-        Handle { rx }
+        AsyncHandle { rx }
     }
 
-    fn spawn_fifo_async<F, R>(&self, func: F) -> Handle<R>
+    fn spawn_fifo_async<F, R>(&self, func: F) -> AsyncHandle<R>
     where
-        F: FnOnce() -> R + Send + 'static,
+        F: FnOnce() -> R + UnwindSafe + Send + 'static,
         R: Send + 'static,
     {
         let (tx, rx) = oneshot::channel();
 
         self.spawn_fifo(move || {
-            let _ = tx.send(func());
+            let _ = tx.send(catch_unwind(func));
         });
 
-        Handle { rx }
+        AsyncHandle { rx }
     }
 }
 

@@ -1,4 +1,11 @@
-#![warn(clippy::all, clippy::pedantic, clippy::nursery, clippy::cargo)]
+#![warn(
+    clippy::all,
+    clippy::pedantic,
+    clippy::nursery,
+    clippy::cargo,
+    missing_docs
+)]
+#![allow(clippy::let_underscore_drop)]
 
 //! Tokio's [`spawn_blocking`][spawn_blocking] and
 //! [`block_in_place`][block_in_place] run blocking code on a potentially
@@ -25,13 +32,13 @@
 //! [spawn_blocking]: tokio::task::spawn_blocking
 //! [block_in_place]: tokio::task::block_in_place
 
+mod async_handle;
 mod async_thread_pool;
 mod global;
-mod handle;
 
+pub use async_handle::*;
 pub use async_thread_pool::*;
 pub use global::*;
-pub use handle::*;
 
 /// Prelude module to bring in extension methods.
 pub mod prelude {
