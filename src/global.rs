@@ -61,16 +61,16 @@ mod tests {
         assert_eq!(thread_index, None);
     }
 
-    // #[tokio::test(flavor = "current_thread")]
-    // async fn test_spawn_fifo_async_works() {
-    //     init();
-    //     let result = spawn_fifo_async(|| {
-    //         let thread_index = rayon::current_thread_index();
-    //         assert_eq!(thread_index, Some(0));
-    //     })
-    //     .await;
-    //     assert_eq!(result, Ok(()));
-    //     let thread_index = rayon::current_thread_index();
-    //     assert_eq!(thread_index, None);
-    // }
+    #[tokio::test(flavor = "current_thread")]
+    async fn test_spawn_fifo_async_works() {
+        init();
+        let result = spawn_fifo_async(|| {
+            let thread_index = rayon::current_thread_index();
+            assert_eq!(thread_index, Some(0));
+        })
+        .await;
+        assert_eq!(result, Ok(()));
+        let thread_index = rayon::current_thread_index();
+        assert_eq!(thread_index, None);
+    }
 }

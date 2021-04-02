@@ -28,4 +28,4 @@ args = ["fmt", "--", "--check", "--verbose"]
 
 [tasks.ci-test]
 command = "cargo"
-args = ["tarpaulin", "-v", "--all-features", "--out", "Xml"]
+args = ["tarpaulin", "-v", "--all-features", "--ignore-tests", "--out", "Xml"]
