@@ -1,0 +1,8 @@
+dev-version-ext = "dev"
+exclude-paths = [
+  "/.github/**",
+  "/.gitignore",
+  "/Makefile.toml",
+  "/README.md",
+  "/release.toml",
+]

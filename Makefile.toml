@@ -10,6 +10,11 @@ args = ["doc"]
 command = "cargo"
 args = ["watch", "-x", "make ${@}"]
 
+# Publish task
+[tasks.release]
+command = "cargo"
+args = ["release", "${@}"]
+
 # CI tasks
 
 [tasks.ci-build]
