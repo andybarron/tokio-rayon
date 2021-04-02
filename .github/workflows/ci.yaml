@@ -10,7 +10,7 @@ jobs:
           - stable
           - beta
           - nightly
-          - 1.39.0
+          - 1.40.0
     steps:
       - name: Check out code
         uses: actions/checkout@v2
@@ -67,7 +67,7 @@ jobs:
           - stable
           - beta
           - nightly
-          - 1.39.0
+          - 1.40.0
     steps:
       - name: Check out code
         uses: actions/checkout@v2
