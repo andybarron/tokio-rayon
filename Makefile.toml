@@ -9,3 +9,18 @@ args = ["doc"]
 [tasks.watch]
 command = "cargo"
 args = ["watch", "-x", "make ${@}"]
+
+# CI tasks
+
+[tasks.ci-build]
+command = "cargo"
+args = ["clippy", "--verbose", "--all-targets"]
+env = { "RUSTFLAGS" = "-D warnings" }
+
+[tasks.ci-format]
+command = "cargo"
+args = ["fmt", "--", "--check", "--verbose"]
+
+[tasks.ci-test]
+command = "cargo"
+args = ["tarpaulin", "-v", "--all-features", "--out", "Xml"]

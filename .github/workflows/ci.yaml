@@ -1,0 +1,83 @@
+name: CI
+on: [push, pull_request]
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+      - name: Install Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          profile: minimal
+          components: clippy, rustfmt
+          override: true
+      - name: Cache Rust dependencies
+        uses: Swatinem/rust-cache@v1
+      - name: Install cargo-make
+        uses: actions-rs/cargo@v1
+        with:
+          command: install
+          args: cargo-make
+      - name: Build and lint
+        uses: actions-rs/cargo@v1
+        with:
+          command: make
+          args: ci-build
+  format:
+    name: Format
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+      - name: Install Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          profile: minimal
+          components: clippy, rustfmt
+          override: true
+      - name: Cache Rust dependencies
+        uses: Swatinem/rust-cache@v1
+      - name: Install cargo-make
+        uses: actions-rs/cargo@v1
+        with:
+          command: install
+          args: cargo-make
+      - name: Check format
+        uses: actions-rs/cargo@v1
+        with:
+          command: make
+          args: ci-format
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+      - name: Install Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          profile: minimal
+          components: clippy, rustfmt
+          override: true
+      - name: Cache Rust dependencies
+        uses: Swatinem/rust-cache@v1
+      - name: Install cargo-make
+        uses: actions-rs/cargo@v1
+        with:
+          command: install
+          args: cargo-make
+      - name: Run tests and generate coverage report
+        uses: actions-rs/cargo@v1
+        with:
+          command: make
+          args: ci-test
+      - name: Upload to codecov.io
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{secrets.CODECOV_TOKEN}}
+          fail_ci_if_error: true
