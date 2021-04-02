@@ -29,7 +29,7 @@ jobs:
           override: true
       - name: Cache Rust dependencies
         uses: Swatinem/rust-cache@v1
-      - name: Install cargo-make and
+      - name: Install cargo-make and update clippy
         uses: actions-rs/cargo@v1
         with:
           command: install
@@ -54,7 +54,7 @@ jobs:
           override: true
       - name: Cache Rust dependencies
         uses: Swatinem/rust-cache@v1
-      - name: Install cargo-make
+      - name: Install cargo-make and update clippy
         uses: actions-rs/cargo@v1
         with:
           command: install
@@ -86,7 +86,7 @@ jobs:
           override: true
       - name: Cache Rust dependencies
         uses: Swatinem/rust-cache@v1
-      - name: Install cargo-make
+      - name: Install cargo-make and update clippy
         uses: actions-rs/cargo@v1
         with:
           command: install
