@@ -1,0 +1,11 @@
+# Build tasks
+
+[tasks.docs]
+command = "cargo"
+args = ["doc"]
+
+# Watch task
+
+[tasks.watch]
+command = "cargo"
+args = ["watch", "-x", "make ${@}"]

@@ -1,0 +1,23 @@
+[package]
+name = "tokio-rayon"
+version = "0.1.0"
+authors = ["Andy Barron <andrewlbarron@gmail.com>"]
+edition = "2018"
+description = "Use Rayon threadpools to run CPU-bound tasks in async code"
+license = "MIT"
+repository = "https://github.com/andybarron/tokio-rayon"
+keywords = ["tokio", "rayon", "async", "thread-pool"]
+categories = ["asynchronous", "concurrency", "rust-patterns"]
+
+[dependencies]
+tokio = { version = "^1.4.0", default-features = false, features = ["sync"] }
+async-trait = "^0.1.48"
+rayon = "^1.5.0"
+
+[dev-dependencies]
+tokio-test = "^0.4.1"
+
+[dev-dependencies.tokio]
+version = "^1.4.0"
+default-features = false
+features = ["sync", "macros", "rt", "time", "rt-multi-thread"]
