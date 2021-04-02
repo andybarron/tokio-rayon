@@ -25,15 +25,15 @@ jobs:
         with:
           toolchain: ${{ matrix.rust }}
           profile: minimal
-          components: clippy, rustfmt
+          components: clippy-preview
           override: true
       - name: Cache Rust dependencies
         uses: Swatinem/rust-cache@v1
-      - name: Install cargo-make and update clippy
+      - name: Install cargo-make
         uses: actions-rs/cargo@v1
         with:
           command: install
-          args: --force clippy cargo-make
+          args: cargo-make
       - name: Build and lint
         uses: actions-rs/cargo@v1
         with:
@@ -50,15 +50,15 @@ jobs:
         with:
           toolchain: stable
           profile: minimal
-          components: clippy, rustfmt
+          components: rustfmt
           override: true
       - name: Cache Rust dependencies
         uses: Swatinem/rust-cache@v1
-      - name: Install cargo-make and update clippy
+      - name: Install cargo-make
         uses: actions-rs/cargo@v1
         with:
           command: install
-          args: --force clippy cargo-make
+          args: cargo-make
       - name: Check format
         uses: actions-rs/cargo@v1
         with:
@@ -82,15 +82,15 @@ jobs:
         with:
           toolchain: ${{ matrix.rust }}
           profile: minimal
-          components: clippy, rustfmt
+          components: ""
           override: true
       - name: Cache Rust dependencies
         uses: Swatinem/rust-cache@v1
-      - name: Install cargo-make and update clippy
+      - name: Install cargo-make
         uses: actions-rs/cargo@v1
         with:
           command: install
-          args: --force clippy cargo-make
+          args: cargo-make
       - name: Run tests and generate coverage report
         uses: actions-rs/cargo@v1
         with:
