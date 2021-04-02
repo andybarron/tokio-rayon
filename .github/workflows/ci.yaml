@@ -29,11 +29,11 @@ jobs:
           override: true
       - name: Cache Rust dependencies
         uses: Swatinem/rust-cache@v1
-      - name: Install cargo-make
+      - name: Install cargo-make and
         uses: actions-rs/cargo@v1
         with:
           command: install
-          args: cargo-make
+          args: --force clippy cargo-make
       - name: Build and lint
         uses: actions-rs/cargo@v1
         with:
@@ -58,7 +58,7 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: install
-          args: cargo-make
+          args: --force clippy cargo-make
       - name: Check format
         uses: actions-rs/cargo@v1
         with:
@@ -90,7 +90,7 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: install
-          args: cargo-make
+          args: --force clippy cargo-make
       - name: Run tests and generate coverage report
         uses: actions-rs/cargo@v1
         with:
