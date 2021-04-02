@@ -27,9 +27,11 @@
 
 mod async_thread_pool;
 mod global;
+mod handle;
 
 pub use async_thread_pool::*;
 pub use global::*;
+pub use handle::*;
 
 /// Prelude module to bring in extension methods.
 pub mod prelude {

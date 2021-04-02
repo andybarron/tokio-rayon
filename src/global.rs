@@ -1,5 +1,5 @@
+use crate::Handle;
 use tokio::sync::oneshot;
-use tokio::sync::oneshot::error::RecvError;
 
 /// Asynchronous wrapper around Rayon's [`spawn`](rayon::spawn).
 ///
@@ -8,7 +8,7 @@ use tokio::sync::oneshot::error::RecvError;
 ///
 /// # Errors
 /// Forwards Tokio's [`RecvError`](tokio::sync::oneshot::error::RecvError), i.e. if the channel is closed.
-pub async fn spawn_async<F, R>(func: F) -> Result<R, RecvError>
+pub fn spawn_async<F, R>(func: F) -> Handle<R>
 where
     F: FnOnce() -> R + Send + 'static,
     R: Send + 'static,
@@ -19,7 +19,7 @@ where
         let _ = tx.send(func());
     });
 
-    rx.await
+    Handle { rx }
 }
 
 /// Asynchronous wrapper around Rayon's [`spawn_fifo`](rayon::spawn_fifo).
@@ -29,7 +29,7 @@ where
 ///
 /// # Errors
 /// Forwards Tokio's [`RecvError`](tokio::sync::oneshot::error::RecvError), i.e. if the channel is closed.
-pub async fn spawn_fifo_async<F, R>(func: F) -> Result<R, RecvError>
+pub fn spawn_fifo_async<F, R>(func: F) -> Handle<R>
 where
     F: FnOnce() -> R + Send + 'static,
     R: Send + 'static,
@@ -40,7 +40,7 @@ where
         let _ = tx.send(func());
     });
 
-    rx.await
+    Handle { rx }
 }
 
 #[cfg(test)]

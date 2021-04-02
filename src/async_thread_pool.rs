@@ -1,11 +1,9 @@
-use async_trait::async_trait;
+use crate::Handle;
 use rayon::ThreadPool;
 use tokio::sync::oneshot;
-use tokio::sync::oneshot::error::RecvError;
 
 /// Extension trait that integrates Rayon's [`ThreadPool`](rayon::ThreadPool)
 /// with Tokio.
-#[async_trait]
 pub trait AsyncThreadPool {
     /// Asynchronous wrapper around Rayon's
     /// [`ThreadPool::spawn`](rayon::ThreadPool::spawn).
@@ -15,7 +13,7 @@ pub trait AsyncThreadPool {
     ///
     /// # Errors
     /// Forwards Tokio's [`RecvError`](tokio::sync::oneshot::error::RecvError), i.e. if the channel is closed.
-    async fn spawn_async<F, R>(&self, func: F) -> Result<R, RecvError>
+    fn spawn_async<F, R>(&self, func: F) -> Handle<R>
     where
         F: FnOnce() -> R + Send + 'static,
         R: Send + 'static;
@@ -28,15 +26,14 @@ pub trait AsyncThreadPool {
     ///
     /// # Errors
     /// Forwards Tokio's [`RecvError`](tokio::sync::oneshot::error::RecvError), i.e. if the channel is closed.
-    async fn spawn_fifo_async<F, R>(&self, f: F) -> Result<R, RecvError>
+    fn spawn_fifo_async<F, R>(&self, f: F) -> Handle<R>
     where
         F: FnOnce() -> R + Send + 'static,
         R: Send + 'static;
 }
 
-#[async_trait]
 impl AsyncThreadPool for ThreadPool {
-    async fn spawn_async<F, R>(&self, func: F) -> Result<R, RecvError>
+    fn spawn_async<F, R>(&self, func: F) -> Handle<R>
     where
         F: FnOnce() -> R + Send + 'static,
         R: Send + 'static,
@@ -47,10 +44,10 @@ impl AsyncThreadPool for ThreadPool {
             let _ = tx.send(func());
         });
 
-        rx.await
+        Handle { rx }
     }
 
-    async fn spawn_fifo_async<F, R>(&self, func: F) -> Result<R, RecvError>
+    fn spawn_fifo_async<F, R>(&self, func: F) -> Handle<R>
     where
         F: FnOnce() -> R + Send + 'static,
         R: Send + 'static,
@@ -61,7 +58,7 @@ impl AsyncThreadPool for ThreadPool {
             let _ = tx.send(func());
         });
 
-        rx.await
+        Handle { rx }
     }
 }
 
