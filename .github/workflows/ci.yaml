@@ -4,13 +4,20 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        rust:
+          - stable
+          - beta
+          - nightly
+          - 1.39.0
     steps:
       - name: Check out code
         uses: actions/checkout@v2
       - name: Install Rust toolchain
         uses: actions-rs/toolchain@v1
         with:
-          toolchain: stable
+          toolchain: ${{ matrix.rust }}
           profile: minimal
           components: clippy, rustfmt
           override: true
@@ -54,13 +61,20 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        rust:
+          - stable
+          - beta
+          - nightly
+          - 1.39.0
     steps:
       - name: Check out code
         uses: actions/checkout@v2
       - name: Install Rust toolchain
         uses: actions-rs/toolchain@v1
         with:
-          toolchain: stable
+          toolchain: ${{ matrix.rust }}
           profile: minimal
           components: clippy, rustfmt
           override: true
@@ -77,6 +91,7 @@ jobs:
           command: make
           args: ci-test
       - name: Upload to codecov.io
+        if: ${{ matrix.rust == 'stable' }}
         uses: codecov/codecov-action@v1
         with:
           fail_ci_if_error: true
