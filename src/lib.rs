@@ -15,7 +15,7 @@
 //! combine them? :)
 //!
 //! ```
-//! # use tokio::sync::oneshot::error::RecvError;
+//! # use tokio_rayon::Error;
 //! # #[derive(Debug, PartialEq)]
 //! # struct ExpensiveNft;
 //! # fn do_some_crypto_stuff() -> ExpensiveNft { ExpensiveNft }
@@ -25,7 +25,7 @@
 //! }).await?;
 //!
 //! assert_eq!(nft, ExpensiveNft);
-//! # Ok::<(), RecvError>(())
+//! # Ok::<(), Error>(())
 //! # });
 //! ```
 //!

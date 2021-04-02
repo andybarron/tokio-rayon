@@ -66,4 +66,13 @@ mod tests {
         tx.send(Err(panic_err)).unwrap();
         handle.await.unwrap();
     }
+
+    #[tokio::test(flavor = "current_thread")]
+    async fn test_error_channel_closed() {
+        init();
+        let (_, rx) = channel::<thread::Result<()>>();
+        let handle = AsyncHandle { rx };
+        let result = handle.await;
+        assert!(matches!(result, Err(Error::TokioChannelRecv(..))));
+    }
 }
