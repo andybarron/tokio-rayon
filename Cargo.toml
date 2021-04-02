@@ -1,6 +1,6 @@
 [package]
 name = "tokio-rayon"
-version = "0.1.1-dev"
+version = "1.0.0"
 authors = ["Andy Barron <andrewlbarron@gmail.com>"]
 edition = "2018"
 description = "Mix async code with CPU-heavy thread pools using Tokio + Rayon"
