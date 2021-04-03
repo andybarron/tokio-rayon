@@ -34,11 +34,18 @@ jobs:
         with:
           command: install
           args: cargo-make
-      - name: Build and lint
+      - name: Build
+        if: ${{ matrix.rust != 'stable' }}
         uses: actions-rs/cargo@v1
         with:
           command: make
           args: ci-build
+      - name: Build and lint
+        if: ${{ matrix.rust == 'stable' }}
+        uses: actions-rs/cargo@v1
+        with:
+          command: make
+          args: ci-lint
   format:
     name: Format
     runs-on: ubuntu-latest

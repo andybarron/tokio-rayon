@@ -5,7 +5,6 @@ authors = ["Andy Barron <andrewlbarron@gmail.com>"]
 edition = "2018"
 description = "Mix async code with CPU-heavy thread pools using Tokio + Rayon"
 license = "MIT"
-license-file = "LICENSE.txt"
 readme = "README.md"
 repository = "https://github.com/andybarron/tokio-rayon"
 keywords = ["tokio", "rayon", "async", "thread-pool"]
