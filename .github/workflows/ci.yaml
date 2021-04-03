@@ -13,9 +13,9 @@ jobs:
     strategy:
       matrix:
         rust:
-          # - stable
-          # - beta
-          # - nightly
+          - stable
+          - beta
+          - nightly
           - 1.45.0
     steps:
       - name: Check out code
@@ -25,7 +25,7 @@ jobs:
         with:
           toolchain: ${{ matrix.rust }}
           profile: minimal
-          components: clippy-preview
+          components: clippy
           override: true
       - name: Cache Rust dependencies
         uses: Swatinem/rust-cache@v1
