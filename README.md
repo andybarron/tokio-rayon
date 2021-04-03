@@ -11,6 +11,8 @@ _Mix async code with CPU-heavy thread pools using [Tokio][tokio-url] + [Rayon][r
 <br />
 [![crates.io][crates-badge]][crates-url]
 [![Downloads][downloads-badge]][crates-url]
+[![Rust version][rust-version-badge]][rust-version-link]
+<br />
 [![MIT license][license-badge]][license-url]
 
 [build-badge]: https://img.shields.io/github/workflow/status/andybarron/tokio-rayon/CI?labelColor=112&logo=github&logoColor=fff&style=flat-square
@@ -24,8 +26,13 @@ _Mix async code with CPU-heavy thread pools using [Tokio][tokio-url] + [Rayon][r
 [downloads-badge]: https://img.shields.io/crates/d/tokio-rayon?labelColor=112&color=informational&style=flat-square
 [license-badge]: https://img.shields.io/crates/l/tokio-rayon?labelColor=112&style=flat-square
 [license-url]: https://github.com/andybarron/tokio-rayon/blob/main/LICENSE.txt
+[rust-version-badge]: https://img.shields.io/badge/rustc-1.45+-informational?logo=rust&logoColor=fff&labelColor=112&style=flat-square
+[rust-version-link]: https://www.rust-lang.org
 
-## [API documentation][docs-url]
+## Resources
+
+- [**Documentation**][docs-url]
+- [crates.io][crates-url]
 
 ## TL;DR
 
