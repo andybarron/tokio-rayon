@@ -1,6 +1,6 @@
 use crate::AsyncHandle;
 use rayon::ThreadPool;
-use std::panic::{catch_unwind, UnwindSafe};
+use std::panic::{catch_unwind, AssertUnwindSafe};
 use tokio::sync::oneshot;
 
 /// Extension trait that integrates Rayon's [`ThreadPool`](rayon::ThreadPool)
@@ -22,7 +22,7 @@ pub trait AsyncThreadPool {
     /// handler.
     fn spawn_async<F, R>(&self, func: F) -> AsyncHandle<R>
     where
-        F: FnOnce() -> R + UnwindSafe + Send + 'static,
+        F: FnOnce() -> R + Send + 'static,
         R: Send + 'static;
 
     /// Asynchronous wrapper around Rayon's
@@ -41,20 +41,20 @@ pub trait AsyncThreadPool {
     /// handler.
     fn spawn_fifo_async<F, R>(&self, f: F) -> AsyncHandle<R>
     where
-        F: FnOnce() -> R + UnwindSafe + Send + 'static,
+        F: FnOnce() -> R + Send + 'static,
         R: Send + 'static;
 }
 
 impl AsyncThreadPool for ThreadPool {
     fn spawn_async<F, R>(&self, func: F) -> AsyncHandle<R>
     where
-        F: FnOnce() -> R + UnwindSafe + Send + 'static,
+        F: FnOnce() -> R + Send + 'static,
         R: Send + 'static,
     {
         let (tx, rx) = oneshot::channel();
 
         self.spawn(move || {
-            let _result = tx.send(catch_unwind(func));
+            let _result = tx.send(catch_unwind(AssertUnwindSafe(func)));
         });
 
         AsyncHandle { rx }
@@ -62,13 +62,13 @@ impl AsyncThreadPool for ThreadPool {
 
     fn spawn_fifo_async<F, R>(&self, func: F) -> AsyncHandle<R>
     where
-        F: FnOnce() -> R + UnwindSafe + Send + 'static,
+        F: FnOnce() -> R + Send + 'static,
         R: Send + 'static,
     {
         let (tx, rx) = oneshot::channel();
 
         self.spawn_fifo(move || {
-            let _result = tx.send(catch_unwind(func));
+            let _result = tx.send(catch_unwind(AssertUnwindSafe(func)));
         });
 
         AsyncHandle { rx }

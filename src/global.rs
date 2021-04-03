@@ -1,5 +1,5 @@
 use crate::AsyncHandle;
-use std::panic::{catch_unwind, UnwindSafe};
+use std::panic::{catch_unwind, AssertUnwindSafe};
 use tokio::sync::oneshot;
 
 /// Asynchronous wrapper around Rayon's [`spawn`](rayon::spawn).
@@ -17,13 +17,13 @@ use tokio::sync::oneshot;
 /// handler.
 pub fn spawn_async<F, R>(func: F) -> AsyncHandle<R>
 where
-    F: FnOnce() -> R + UnwindSafe + Send + 'static,
+    F: FnOnce() -> R + Send + 'static,
     R: Send + 'static,
 {
     let (tx, rx) = oneshot::channel();
 
     rayon::spawn(move || {
-        let _result = tx.send(catch_unwind(func));
+        let _result = tx.send(catch_unwind(AssertUnwindSafe(func)));
     });
 
     AsyncHandle { rx }
@@ -44,13 +44,13 @@ where
 /// handler.
 pub fn spawn_fifo_async<F, R>(func: F) -> AsyncHandle<R>
 where
-    F: FnOnce() -> R + UnwindSafe + Send + 'static,
+    F: FnOnce() -> R + Send + 'static,
     R: Send + 'static,
 {
     let (tx, rx) = oneshot::channel();
 
     rayon::spawn_fifo(move || {
-        let _result = tx.send(catch_unwind(func));
+        let _result = tx.send(catch_unwind(AssertUnwindSafe(func)));
     });
 
     AsyncHandle { rx }
