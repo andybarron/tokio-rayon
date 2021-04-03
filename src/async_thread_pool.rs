@@ -54,7 +54,7 @@ impl AsyncThreadPool for ThreadPool {
         let (tx, rx) = oneshot::channel();
 
         self.spawn(move || {
-            let _ = tx.send(catch_unwind(func));
+            let _result = tx.send(catch_unwind(func));
         });
 
         AsyncHandle { rx }
@@ -68,7 +68,7 @@ impl AsyncThreadPool for ThreadPool {
         let (tx, rx) = oneshot::channel();
 
         self.spawn_fifo(move || {
-            let _ = tx.send(catch_unwind(func));
+            let _result = tx.send(catch_unwind(func));
         });
 
         AsyncHandle { rx }

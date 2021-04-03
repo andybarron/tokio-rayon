@@ -23,7 +23,7 @@ where
     let (tx, rx) = oneshot::channel();
 
     rayon::spawn(move || {
-        let _ = tx.send(catch_unwind(func));
+        let _result = tx.send(catch_unwind(func));
     });
 
     AsyncHandle { rx }
@@ -50,7 +50,7 @@ where
     let (tx, rx) = oneshot::channel();
 
     rayon::spawn_fifo(move || {
-        let _ = tx.send(catch_unwind(func));
+        let _result = tx.send(catch_unwind(func));
     });
 
     AsyncHandle { rx }

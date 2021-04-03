@@ -5,7 +5,6 @@
     clippy::cargo,
     missing_docs
 )]
-#![allow(clippy::let_underscore_drop)]
 
 //! Tokio's [`spawn_blocking`][spawn_blocking] and
 //! [`block_in_place`][block_in_place] run blocking code on a potentially
