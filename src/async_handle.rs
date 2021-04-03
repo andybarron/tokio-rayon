@@ -3,7 +3,6 @@ use std::panic::resume_unwind;
 use std::pin::Pin;
 use std::task::{Context, Poll};
 use std::thread;
-use tokio::sync::oneshot::error::RecvError;
 use tokio::sync::oneshot::Receiver;
 
 /// Async handle for a blocking task running in a Rayon thread pool.
@@ -20,13 +19,10 @@ impl<T> Future for AsyncRayonHandle<T> {
 
     fn poll(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
         let rx = Pin::new(&mut self.rx);
-        let poll: Poll<Result<thread::Result<T>, RecvError>> = rx.poll(cx);
-        poll.map(|result| {
-            let result = result.expect("Unreachable error: Tokio channel closed");
-            match result {
-                Ok(data) => data,
-                Err(err) => resume_unwind(err),
-            }
+        rx.poll(cx).map(|result| {
+            result
+                .expect("Unreachable error: Tokio channel closed")
+                .unwrap_or_else(|err| resume_unwind(err))
         })
     }
 }
