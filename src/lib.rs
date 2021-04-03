@@ -37,11 +37,6 @@ pub use async_handle::*;
 pub use async_thread_pool::*;
 pub use global::*;
 
-/// Prelude module to bring in extension methods.
-pub mod prelude {
-    pub use super::async_thread_pool::*;
-}
-
 #[cfg(test)]
 pub(crate) mod test {
     use rayon::ThreadPoolBuilder;

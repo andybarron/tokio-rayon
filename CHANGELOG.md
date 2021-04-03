@@ -8,6 +8,7 @@
   `async-trait` crate unnecessary.
 - Bypass Tokio `RecvError`. We control the `Sender`, so it should never be
   dropped too early.
+- Remove `prelude` module.
 
 ## 1.0.0
 
