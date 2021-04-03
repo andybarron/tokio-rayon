@@ -11,11 +11,11 @@ use tokio::sync::oneshot::Receiver;
 /// If the spawned task panics, `poll()` will propagate the panic.
 #[must_use]
 #[derive(Debug)]
-pub struct AsyncHandle<T> {
+pub struct AsyncRayonHandle<T> {
     pub(crate) rx: Receiver<thread::Result<T>>,
 }
 
-impl<T> Future for AsyncHandle<T> {
+impl<T> Future for AsyncRayonHandle<T> {
     type Output = T;
 
     fn poll(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
@@ -49,7 +49,7 @@ mod tests {
         .unwrap_err();
 
         let (tx, rx) = channel::<thread::Result<()>>();
-        let handle = AsyncHandle { rx };
+        let handle = AsyncRayonHandle { rx };
         tx.send(Err(panic_err)).unwrap();
         handle.await;
     }
@@ -59,7 +59,7 @@ mod tests {
     async fn test_unreachable_channel_closed() {
         init();
         let (_, rx) = channel::<thread::Result<()>>();
-        let handle = AsyncHandle { rx };
+        let handle = AsyncRayonHandle { rx };
         handle.await;
     }
 }

@@ -1,4 +1,4 @@
-use crate::AsyncHandle;
+use crate::AsyncRayonHandle;
 use std::panic::{catch_unwind, AssertUnwindSafe};
 use tokio::sync::oneshot;
 
@@ -11,7 +11,7 @@ use tokio::sync::oneshot;
 /// If the task function panics, the panic will be propagated through the
 /// returned future. Thie will NOT trigger the Rayon thread pool's panic
 /// handler.
-pub fn spawn_async<F, R>(func: F) -> AsyncHandle<R>
+pub fn spawn_async<F, R>(func: F) -> AsyncRayonHandle<R>
 where
     F: FnOnce() -> R + Send + 'static,
     R: Send + 'static,
@@ -22,7 +22,7 @@ where
         let _result = tx.send(catch_unwind(AssertUnwindSafe(func)));
     });
 
-    AsyncHandle { rx }
+    AsyncRayonHandle { rx }
 }
 
 /// Asynchronous wrapper around Rayon's [`spawn_fifo`](rayon::spawn_fifo).
@@ -34,7 +34,7 @@ where
 /// If the task function panics, the panic will be propagated through the
 /// returned future. Thie will NOT trigger the Rayon thread pool's panic
 /// handler.
-pub fn spawn_fifo_async<F, R>(func: F) -> AsyncHandle<R>
+pub fn spawn_fifo_async<F, R>(func: F) -> AsyncRayonHandle<R>
 where
     F: FnOnce() -> R + Send + 'static,
     R: Send + 'static,
@@ -45,7 +45,7 @@ where
         let _result = tx.send(catch_unwind(AssertUnwindSafe(func)));
     });
 
-    AsyncHandle { rx }
+    AsyncRayonHandle { rx }
 }
 
 #[cfg(test)]
