@@ -1,4 +1,3 @@
-use pin_project::pin_project;
 use std::future::Future;
 use std::panic::resume_unwind;
 use std::pin::Pin;
@@ -11,18 +10,16 @@ use tokio::sync::oneshot::Receiver;
 ///
 /// If the spawned task panics, `poll()` will propagate the panic.
 #[must_use]
-#[pin_project]
 #[derive(Debug)]
 pub struct AsyncHandle<T> {
-    #[pin]
     pub(crate) rx: Receiver<thread::Result<T>>,
 }
 
 impl<T> Future for AsyncHandle<T> {
     type Output = T;
 
-    fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
-        let rx = self.project().rx;
+    fn poll(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
+        let rx = Pin::new(&mut self.rx);
         let poll: Poll<Result<thread::Result<T>, RecvError>> = rx.poll(cx);
         poll.map(|result| {
             let result = result.expect("Unreachable error: Tokio channel closed");
