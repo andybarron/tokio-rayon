@@ -14,17 +14,15 @@
 //! combine them? :)
 //!
 //! ```
-//! # use tokio_rayon::Error;
 //! # #[derive(Debug, PartialEq)]
 //! # struct ExpensiveNft;
 //! # fn do_some_crypto_stuff() -> ExpensiveNft { ExpensiveNft }
 //! # tokio_test::block_on(async {
 //! let nft = tokio_rayon::spawn_async(|| {
 //!   do_some_crypto_stuff()
-//! }).await?;
+//! }).await;
 //!
 //! assert_eq!(nft, ExpensiveNft);
-//! # Ok::<(), Error>(())
 //! # });
 //! ```
 //!

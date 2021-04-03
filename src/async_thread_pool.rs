@@ -12,10 +12,6 @@ pub trait AsyncThreadPool {
     /// Runs a function on the global Rayon thread pool with LIFO priority,
     /// produciing a future that resolves with the function's return value.
     ///
-    /// # Errors
-    /// Forwards Tokio's [`RecvError`](tokio::sync::oneshot::error::RecvError),
-    /// i.e. if the channel is closed.
-    ///
     /// # Panics
     /// If the task function panics, the panic will be propagated through the
     /// returned future. Thie will NOT trigger the Rayon thread pool's panic
@@ -30,10 +26,6 @@ pub trait AsyncThreadPool {
     ///
     /// Runs a function on the global Rayon thread pool with FIFO priority,
     /// produciing a future that resolves with the function's return value.
-    ///
-    /// # Errors
-    /// Forwards Tokio's [`RecvError`](tokio::sync::oneshot::error::RecvError),
-    /// i.e. if the channel is closed.
     ///
     /// # Panics
     /// If the task function panics, the panic will be propagated through the
@@ -91,9 +83,10 @@ mod tests {
             .spawn_async(|| {
                 let thread_index = rayon::current_thread_index();
                 assert_eq!(thread_index, Some(0));
+                1337_usize
             })
             .await;
-        assert_eq!(result, Ok(()));
+        assert_eq!(result, 1337);
         let thread_index = rayon::current_thread_index();
         assert_eq!(thread_index, None);
     }
@@ -105,9 +98,10 @@ mod tests {
             .spawn_fifo_async(|| {
                 let thread_index = rayon::current_thread_index();
                 assert_eq!(thread_index, Some(0));
+                1337_usize
             })
             .await;
-        assert_eq!(result, Ok(()));
+        assert_eq!(result, 1337);
         let thread_index = rayon::current_thread_index();
         assert_eq!(thread_index, None);
     }

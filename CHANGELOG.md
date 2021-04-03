@@ -6,7 +6,8 @@
   context, rather than triggering the Rayon panic handler.
 - Add `AsyncHandle` type that implements `Future`, which makes the
   `async-trait` crate unnecessary.
-- Add custom `Error` type.
+- Bypass Tokio `RecvError`. We control the `Sender`, so it should never be
+  dropped too early.
 
 ## 1.0.0
 

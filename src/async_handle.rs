@@ -4,7 +4,6 @@ use std::panic::resume_unwind;
 use std::pin::Pin;
 use std::task::{Context, Poll};
 use std::thread;
-use thiserror::Error;
 use tokio::sync::oneshot::error::RecvError;
 use tokio::sync::oneshot::Receiver;
 
@@ -19,28 +18,19 @@ pub struct AsyncHandle<T> {
     pub(crate) rx: Receiver<thread::Result<T>>,
 }
 
-/// Error type for `AsyncHandle`, representing possible errors for
-/// blocking Rayon tasks.
-#[derive(Debug, Error, PartialEq, Eq)]
-pub enum Error {
-    /// An error indicating something went wrong with the underlying
-    /// Tokio channel.
-    #[error("Tokio channel error: {0}")]
-    TokioChannelRecv(#[from] RecvError),
-}
-
 impl<T> Future for AsyncHandle<T> {
-    type Output = Result<T, Error>;
+    type Output = T;
 
     fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
-        self.project()
-            .rx
-            .poll(cx)
-            .map_ok(|result| match result {
+        let rx = self.project().rx;
+        let poll: Poll<Result<thread::Result<T>, RecvError>> = rx.poll(cx);
+        poll.map(|result| {
+            let result = result.expect("Unreachable error: Tokio channel closed");
+            match result {
                 Ok(data) => data,
                 Err(err) => resume_unwind(err),
-            })
-            .map_err(RecvError::into)
+            }
+        })
     }
 }
 
@@ -64,15 +54,15 @@ mod tests {
         let (tx, rx) = channel::<thread::Result<()>>();
         let handle = AsyncHandle { rx };
         tx.send(Err(panic_err)).unwrap();
-        handle.await.unwrap();
+        handle.await;
     }
 
     #[tokio::test(flavor = "current_thread")]
-    async fn test_error_channel_closed() {
+    #[should_panic]
+    async fn test_unreachable_channel_closed() {
         init();
         let (_, rx) = channel::<thread::Result<()>>();
         let handle = AsyncHandle { rx };
-        let result = handle.await;
-        assert!(matches!(result, Err(Error::TokioChannelRecv(..))));
+        handle.await;
     }
 }
