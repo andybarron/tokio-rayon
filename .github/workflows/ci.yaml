@@ -98,11 +98,6 @@ jobs:
         with:
           command: install
           args: cargo-make
-      - name: Install cargo-tarpaulin
-        uses: actions-rs/cargo@v1
-        with:
-          command: install
-          args: --version 0.18.0-alpha1 cargo-tarpaulin
       - name: Run tests and generate coverage report
         uses: actions-rs/cargo@v1
         with:
