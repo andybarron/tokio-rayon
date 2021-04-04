@@ -1,4 +1,10 @@
-#![warn(clippy::all, clippy::pedantic, clippy::nursery, clippy::cargo)]
+#![warn(
+    clippy::all,
+    clippy::pedantic,
+    clippy::nursery,
+    clippy::cargo,
+    missing_docs
+)]
 
 //! Tokio's [`spawn_blocking`][spawn_blocking] and
 //! [`block_in_place`][block_in_place] run blocking code on a potentially
@@ -8,33 +14,28 @@
 //! combine them? :)
 //!
 //! ```
-//! # use tokio::sync::oneshot::error::RecvError;
 //! # #[derive(Debug, PartialEq)]
 //! # struct ExpensiveNft;
 //! # fn do_some_crypto_stuff() -> ExpensiveNft { ExpensiveNft }
 //! # tokio_test::block_on(async {
-//! let nft = tokio_rayon::spawn_async(|| {
+//! let nft = tokio_rayon::spawn(|| {
 //!   do_some_crypto_stuff()
-//! }).await?;
+//! }).await;
 //!
 //! assert_eq!(nft, ExpensiveNft);
-//! # Ok::<(), RecvError>(())
 //! # });
 //! ```
 //!
 //! [spawn_blocking]: tokio::task::spawn_blocking
 //! [block_in_place]: tokio::task::block_in_place
 
+mod async_handle;
 mod async_thread_pool;
 mod global;
 
+pub use async_handle::*;
 pub use async_thread_pool::*;
 pub use global::*;
-
-/// Prelude module to bring in extension methods.
-pub mod prelude {
-    pub use super::async_thread_pool::*;
-}
 
 #[cfg(test)]
 pub(crate) mod test {
