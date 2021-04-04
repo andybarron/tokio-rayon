@@ -11,7 +11,7 @@ use tokio::sync::oneshot;
 /// If the task function panics, the panic will be propagated through the
 /// returned future. Thie will NOT trigger the Rayon thread pool's panic
 /// handler.
-pub fn spawn_async<F, R>(func: F) -> AsyncRayonHandle<R>
+pub fn spawn<F, R>(func: F) -> AsyncRayonHandle<R>
 where
     F: FnOnce() -> R + Send + 'static,
     R: Send + 'static,
@@ -34,7 +34,7 @@ where
 /// If the task function panics, the panic will be propagated through the
 /// returned future. Thie will NOT trigger the Rayon thread pool's panic
 /// handler.
-pub fn spawn_fifo_async<F, R>(func: F) -> AsyncRayonHandle<R>
+pub fn spawn_fifo<F, R>(func: F) -> AsyncRayonHandle<R>
 where
     F: FnOnce() -> R + Send + 'static,
     R: Send + 'static,
@@ -56,7 +56,7 @@ mod tests {
     #[tokio::test]
     async fn test_spawn_async_works() {
         init();
-        let result = spawn_async(|| {
+        let result = spawn(|| {
             let thread_index = rayon::current_thread_index();
             assert_eq!(thread_index, Some(0));
             1337_usize
@@ -70,7 +70,7 @@ mod tests {
     #[tokio::test]
     async fn test_spawn_fifo_async_works() {
         init();
-        let result = spawn_fifo_async(|| {
+        let result = spawn_fifo(|| {
             let thread_index = rayon::current_thread_index();
             assert_eq!(thread_index, Some(0));
             1337_usize
