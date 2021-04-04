@@ -76,7 +76,7 @@ mod tests {
         ThreadPoolBuilder::new().num_threads(1).build().unwrap()
     }
 
-    #[tokio::test(flavor = "current_thread")]
+    #[tokio::test]
     async fn test_spawn_async_works() {
         let pool = build_thread_pool();
         let result = pool
@@ -91,7 +91,7 @@ mod tests {
         assert_eq!(thread_index, None);
     }
 
-    #[tokio::test(flavor = "current_thread")]
+    #[tokio::test]
     async fn test_spawn_fifo_async_works() {
         let pool = build_thread_pool();
         let result = pool

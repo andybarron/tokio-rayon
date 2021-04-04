@@ -53,7 +53,7 @@ mod tests {
     use super::*;
     use crate::test::init;
 
-    #[tokio::test(flavor = "current_thread")]
+    #[tokio::test]
     async fn test_spawn_async_works() {
         init();
         let result = spawn_async(|| {
@@ -67,7 +67,7 @@ mod tests {
         assert_eq!(thread_index, None);
     }
 
-    #[tokio::test(flavor = "current_thread")]
+    #[tokio::test]
     async fn test_spawn_fifo_async_works() {
         init();
         let result = spawn_fifo_async(|| {

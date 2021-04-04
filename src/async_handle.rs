@@ -35,7 +35,7 @@ mod tests {
     use std::thread;
     use tokio::sync::oneshot::channel;
 
-    #[tokio::test(flavor = "current_thread")]
+    #[tokio::test]
     #[should_panic(expected = "Task failed successfully")]
     async fn test_poll_propagates_panic() {
         init();
@@ -50,8 +50,8 @@ mod tests {
         handle.await;
     }
 
-    #[tokio::test(flavor = "current_thread")]
-    #[should_panic]
+    #[tokio::test]
+    #[should_panic(expected = "Unreachable error: Tokio channel closed")]
     async fn test_unreachable_channel_closed() {
         init();
         let (_, rx) = channel::<thread::Result<()>>();
