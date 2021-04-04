@@ -11,6 +11,10 @@ use tokio::sync::oneshot;
 /// If the task function panics, the panic will be propagated through the
 /// returned future. This will NOT trigger the Rayon thread pool's panic
 /// handler.
+///
+/// If the returned handle is dropped, and the return value of `func` panics
+/// when dropped, that panic WILL trigger the thread pool's panic
+/// handler.
 pub fn spawn<F, R>(func: F) -> AsyncRayonHandle<R>
 where
     F: FnOnce() -> R + Send + 'static,
@@ -33,6 +37,10 @@ where
 /// # Panics
 /// If the task function panics, the panic will be propagated through the
 /// returned future. This will NOT trigger the Rayon thread pool's panic
+/// handler.
+///
+/// If the returned handle is dropped, and the return value of `func` panics
+/// when dropped, then that panic WILL trigger the thread pool's panic
 /// handler.
 pub fn spawn_fifo<F, R>(func: F) -> AsyncRayonHandle<R>
 where

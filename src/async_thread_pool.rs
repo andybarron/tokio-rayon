@@ -16,6 +16,10 @@ pub trait AsyncThreadPool {
     /// If the task function panics, the panic will be propagated through the
     /// returned future. This will NOT trigger the Rayon thread pool's panic
     /// handler.
+    ///
+    /// If the returned handle is dropped, and the return value of `func` panics
+    /// when dropped, that panic WILL trigger the thread pool's panic
+    /// handler.
     fn spawn_async<F, R>(&self, func: F) -> AsyncRayonHandle<R>
     where
         F: FnOnce() -> R + Send + 'static,
@@ -30,6 +34,10 @@ pub trait AsyncThreadPool {
     /// # Panics
     /// If the task function panics, the panic will be propagated through the
     /// returned future. This will NOT trigger the Rayon thread pool's panic
+    /// handler.
+    ///
+    /// If the returned handle is dropped, and the return value of `func` panics
+    /// when dropped, that panic WILL trigger the thread pool's panic
     /// handler.
     fn spawn_fifo_async<F, R>(&self, f: F) -> AsyncRayonHandle<R>
     where
