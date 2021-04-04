@@ -1,4 +1,8 @@
-# Build tasks
+# Development tasks
+
+[tasks.audit]
+command = "cargo"
+args = ["audit", "${@}"]
 
 [tasks.docs]
 command = "cargo"
@@ -11,6 +15,7 @@ command = "cargo"
 args = ["watch", "-x", "make ${@}"]
 
 # Publish task
+
 [tasks.release]
 command = "cargo"
 args = ["release", "${@}"]
