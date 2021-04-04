@@ -88,4 +88,26 @@ mod tests {
         let thread_index = rayon::current_thread_index();
         assert_eq!(thread_index, None);
     }
+
+    #[tokio::test]
+    #[should_panic(expected = "Task failed successfully")]
+    async fn test_spawn_propagates_panic() {
+        init();
+        let handle = spawn(|| {
+            panic!("Task failed successfully");
+        });
+
+        handle.await;
+    }
+
+    #[tokio::test]
+    #[should_panic(expected = "Task failed successfully")]
+    async fn test_spawn_fifo_propagates_panic() {
+        init();
+        let handle = spawn_fifo(|| {
+            panic!("Task failed successfully");
+        });
+
+        handle.await;
+    }
 }

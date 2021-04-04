@@ -123,4 +123,26 @@ mod tests {
         let thread_index = rayon::current_thread_index();
         assert_eq!(thread_index, None);
     }
+
+    #[tokio::test]
+    #[should_panic(expected = "Task failed successfully")]
+    async fn test_spawn_async_propagates_panic() {
+        let pool = build_thread_pool();
+        let handle = pool.spawn_async(|| {
+            panic!("Task failed successfully");
+        });
+
+        handle.await;
+    }
+
+    #[tokio::test]
+    #[should_panic(expected = "Task failed successfully")]
+    async fn test_spawn_fifo_async_propagates_panic() {
+        let pool = build_thread_pool();
+        let handle = pool.spawn_fifo_async(|| {
+            panic!("Task failed successfully");
+        });
+
+        handle.await;
+    }
 }
