@@ -5,7 +5,9 @@ use tokio::sync::oneshot;
 
 /// Extension trait that integrates Rayon's [`ThreadPool`](rayon::ThreadPool)
 /// with Tokio.
-pub trait AsyncThreadPool {
+///
+/// This trait is sealed and cannot be implemented by external crates.
+pub trait AsyncThreadPool: private::Sealed {
     /// Asynchronous wrapper around Rayon's
     /// [`ThreadPool::spawn`](rayon::ThreadPool::spawn).
     ///
@@ -73,6 +75,14 @@ impl AsyncThreadPool for ThreadPool {
 
         AsyncRayonHandle { rx }
     }
+}
+
+mod private {
+    use rayon::ThreadPool;
+
+    pub trait Sealed {}
+
+    impl Sealed for ThreadPool {}
 }
 
 #[cfg(test)]
