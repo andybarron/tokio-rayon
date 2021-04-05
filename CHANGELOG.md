@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.1.0
+
+- Re-export `rayon` crate.
+
 ## 2.0.0
 
 - Use `std::panic` to propagate panics from the thread pool into the async
