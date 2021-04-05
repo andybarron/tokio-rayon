@@ -36,6 +36,7 @@ mod global;
 pub use async_handle::*;
 pub use async_thread_pool::*;
 pub use global::*;
+pub use rayon;
 
 #[cfg(test)]
 pub(crate) mod test {
