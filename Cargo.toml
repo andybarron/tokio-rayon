@@ -1,8 +1,8 @@
 [package]
 name = "tokio-rayon"
-version = "2.1.1-dev"
+version = "2.1.2-dev"
 authors = ["Andy Barron <andrewlbarron@gmail.com>"]
-edition = "2018"
+edition = "2021"
 description = "Mix async code with CPU-heavy thread pools using Tokio + Rayon"
 license = "MIT"
 readme = "README.md"
@@ -11,13 +11,13 @@ keywords = ["tokio", "rayon", "async", "thread-pool"]
 categories = ["asynchronous", "concurrency", "rust-patterns"]
 
 [dependencies]
-tokio = { version = "1.4.0", default-features = false, features = ["sync"] }
-rayon = "1.5.0"
+tokio = { version = "1.23.0", default-features = false, features = ["sync"] }
+rayon = "1.6.1"
 
 [dev-dependencies]
-tokio-test = "0.4.1"
+tokio-test = "0.4.2"
 
 [dev-dependencies.tokio]
-version = "1.4.0"
+version = "1.23.0"
 default-features = false
 features = ["sync", "macros", "rt", "time", "rt-multi-thread"]
